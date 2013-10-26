@@ -1,0 +1,340 @@
+卷 Download 的文件夹 PATH 列表
+卷序列号为 9EE7-62B7
+E:.
+│  GISAppDemo.sln
+│  tree.txt
+│  
+├─GISAppDemo
+│  │  About.cs
+│  │  About.Designer.cs
+│  │  About.resx
+│  │  App.config
+│  │  CmpForm.cs
+│  │  CmpForm.Designer.cs
+│  │  CmpForm.resx
+│  │  Constants.cs
+│  │  Foo.cs
+│  │  Foo.Designer.cs
+│  │  Foo.resx
+│  │  GISAppDemo.csproj
+│  │  IMapViewer.cs
+│  │  Launcher.cs
+│  │  Launcher.Designer.cs
+│  │  Launcher.resx
+│  │  MainForm.cs
+│  │  MainForm.Designer.cs
+│  │  MainForm.resx
+│  │  MapForm.cs
+│  │  MapForm.Designer.cs
+│  │  MapForm.resx
+│  │  Program.cs
+│  │  Test.cs
+│  │  
+│  ├─bin
+│  │  ├─Debug
+│  │  │      BruTile.Desktop.dll
+│  │  │      BruTile.dll
+│  │  │      Common.Logging.dll
+│  │  │      EGIS.ShapeFileLib.dll
+│  │  │      GeoAPI.dll
+│  │  │      GISAppDemo.exe
+│  │  │      GISAppDemo.exe.config
+│  │  │      GISAppDemo.pdb
+│  │  │      GISAppDemo.vshost.exe
+│  │  │      GISAppDemo.vshost.exe.config
+│  │  │      GISAppDemo.vshost.exe.manifest
+│  │  │      log4net.dll
+│  │  │      NetTopologySuite.dll
+│  │  │      Newtonsoft.Json.dll
+│  │  │      Newtonsoft.Json.xml
+│  │  │      PowerCollections.dll
+│  │  │      ProjNet.dll
+│  │  │      SharpMap.dll
+│  │  │      SharpMap.pdb
+│  │  │      SharpMap.UI.dll
+│  │  │      SharpMap.UI.pdb
+│  │  │      SharpMap.UI.xml
+│  │  │      SharpMap.xml
+│  │  │      TrjTools.dll
+│  │  │      TrjTools.pdb
+│  │  │      
+│  │  └─Release
+│  │          BruTile.Desktop.dll
+│  │          BruTile.dll
+│  │          Common.Logging.dll
+│  │          EGIS.ShapeFileLib.dll
+│  │          GeoAPI.dll
+│  │          GISAppDemo.exe
+│  │          GISAppDemo.exe.config
+│  │          GISAppDemo.pdb
+│  │          GISAppDemo.vshost.exe
+│  │          GISAppDemo.vshost.exe.config
+│  │          GISAppDemo.vshost.exe.manifest
+│  │          log4net.dll
+│  │          NetTopologySuite.dll
+│  │          Newtonsoft.Json.dll
+│  │          Newtonsoft.Json.xml
+│  │          PowerCollections.dll
+│  │          ProjNet.dll
+│  │          SharpMap.dll
+│  │          SharpMap.pdb
+│  │          SharpMap.UI.dll
+│  │          SharpMap.UI.pdb
+│  │          SharpMap.UI.xml
+│  │          SharpMap.xml
+│  │          TrjTools.dll
+│  │          TrjTools.pdb
+│  │          
+│  ├─data
+│  │  ├─input
+│  │  │      input_01.txt
+│  │  │      input_02.txt
+│  │  │      input_03.txt
+│  │  │      input_04.txt
+│  │  │      input_05.txt
+│  │  │      input_06.txt
+│  │  │      input_07.txt
+│  │  │      input_08.txt
+│  │  │      input_09.txt
+│  │  │      input_10.txt
+│  │  │      output_01.txt
+│  │  │      
+│  │  ├─map
+│  │  │  ├─Beijing
+│  │  │  │      beijing2.cpg
+│  │  │  │      beijing2.dbf
+│  │  │  │      beijing2.shp
+│  │  │  │      beijing2.shp.sidx
+│  │  │  │      beijing2.shx
+│  │  │  │      
+│  │  │  ├─Beijing_2011
+│  │  │  │      beijing_2011.cpg
+│  │  │  │      beijing_2011.dbf
+│  │  │  │      beijing_2011.shp
+│  │  │  │      beijing_2011.shp.sidx
+│  │  │  │      beijing_2011.shx
+│  │  │  │      edges.txt
+│  │  │  │      geos.txt
+│  │  │  │      vertices.txt
+│  │  │  │      
+│  │  │  └─WA
+│  │  │          edges.txt
+│  │  │          geos.txt
+│  │  │          vertices.txt
+│  │  │          WA_EdgeGeometry.txt
+│  │  │          WA_Edges.txt
+│  │  │          WA_Nodes.txt
+│  │  │          
+│  │  ├─output
+│  │  │      output_01 (2).txt
+│  │  │      output_01.txt
+│  │  │      output_02.txt
+│  │  │      output_03.txt
+│  │  │      output_04.txt
+│  │  │      output_05.txt
+│  │  │      output_06.txt
+│  │  │      output_07.txt
+│  │  │      output_08.txt
+│  │  │      output_09.txt
+│  │  │      output_10.txt
+│  │  │      
+│  │  └─std_output
+│  │          output_01.txt
+│  │          output_02.txt
+│  │          output_03.txt
+│  │          output_04.txt
+│  │          output_05.txt
+│  │          output_06.txt
+│  │          output_07.txt
+│  │          output_08.txt
+│  │          output_09.txt
+│  │          output_10.txt
+│  │          
+│  ├─obj
+│  │  ├─Debug
+│  │  │  │  DesignTimeResolveAssemblyReferences.cache
+│  │  │  │  DesignTimeResolveAssemblyReferencesInput.cache
+│  │  │  │  GISAppDemo.About.resources
+│  │  │  │  GISAppDemo.CmpForm.resources
+│  │  │  │  GISAppDemo.csproj.FileListAbsolute.txt
+│  │  │  │  GISAppDemo.csproj.GenerateResource.Cache
+│  │  │  │  GISAppDemo.csprojResolveAssemblyReference.cache
+│  │  │  │  GISAppDemo.exe
+│  │  │  │  GISAppDemo.Foo.resources
+│  │  │  │  GISAppDemo.Launcher.resources
+│  │  │  │  GISAppDemo.MainForm.resources
+│  │  │  │  GISAppDemo.MapForm.resources
+│  │  │  │  GISAppDemo.pdb
+│  │  │  │  GISAppDemo.Properties.Resources.resources
+│  │  │  │  TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+│  │  │  │  TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+│  │  │  │  TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+│  │  │  │  
+│  │  │  └─TempPE
+│  │  │          Properties.Resources.Designer.cs.dll
+│  │  │          
+│  │  └─Release
+│  │      │  DesignTimeResolveAssemblyReferences.cache
+│  │      │  DesignTimeResolveAssemblyReferencesInput.cache
+│  │      │  GISAppDemo.About.resources
+│  │      │  GISAppDemo.CmpForm.resources
+│  │      │  GISAppDemo.csproj.FileListAbsolute.txt
+│  │      │  GISAppDemo.csproj.GenerateResource.Cache
+│  │      │  GISAppDemo.csprojResolveAssemblyReference.cache
+│  │      │  GISAppDemo.exe
+│  │      │  GISAppDemo.Foo.resources
+│  │      │  GISAppDemo.Launcher.resources
+│  │      │  GISAppDemo.MainForm.resources
+│  │      │  GISAppDemo.MapForm.resources
+│  │      │  GISAppDemo.pdb
+│  │      │  GISAppDemo.Properties.Resources.resources
+│  │      │  TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+│  │      │  TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+│  │      │  TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+│  │      │  
+│  │      └─TempPE
+│  │              Properties.Resources.Designer.cs.dll
+│  │              
+│  ├─Properties
+│  │      AssemblyInfo.cs
+│  │      Resources.Designer.cs
+│  │      Resources.resx
+│  │      Settings.Designer.cs
+│  │      Settings.settings
+│  │      
+│  └─Resources
+│          arrow.png
+│          g_arrow.png
+│          OutfallSmall.png
+│          PumpSmall.png
+│          r_arrow.png
+│          
+├─ref
+│      BruTile.Desktop.dll
+│      BruTile.dll
+│      Common.Logging.dll
+│      EGIS.ShapeFileLib.dll
+│      GeoAPI.dll
+│      log4net.dll
+│      NetTopologySuite.dll
+│      Newtonsoft.Json.dll
+│      Newtonsoft.Json.xml
+│      PowerCollections.dll
+│      ProjNet.dll
+│      SharpMap.dll
+│      SharpMap.pdb
+│      SharpMap.UI.dll
+│      SharpMap.UI.pdb
+│      SharpMap.UI.XML
+│      SharpMap.xml
+│      
+└─TrjTools
+    │  App.config
+    │  Class1.cs
+    │  Constants.cs
+    │  TrjTools.csproj
+    │  
+    ├─Algorithm
+    │      AStar.cs
+    │      RBTree.cs
+    │      
+    ├─bin
+    │  ├─Debug
+    │  │      BruTile.Desktop.dll
+    │  │      BruTile.dll
+    │  │      Common.Logging.dll
+    │  │      EGIS.ShapeFileLib.dll
+    │  │      GeoAPI.dll
+    │  │      log4net.dll
+    │  │      NetTopologySuite.dll
+    │  │      Newtonsoft.Json.dll
+    │  │      Newtonsoft.Json.xml
+    │  │      PowerCollections.dll
+    │  │      ProjNet.dll
+    │  │      SharpMap.dll
+    │  │      SharpMap.pdb
+    │  │      SharpMap.UI.dll
+    │  │      SharpMap.UI.pdb
+    │  │      SharpMap.UI.xml
+    │  │      SharpMap.xml
+    │  │      TrjTools.dll
+    │  │      TrjTools.dll.config
+    │  │      TrjTools.pdb
+    │  │      
+    │  └─Release
+    │          BruTile.Desktop.dll
+    │          BruTile.dll
+    │          Common.Logging.dll
+    │          EGIS.ShapeFileLib.dll
+    │          GeoAPI.dll
+    │          log4net.dll
+    │          NetTopologySuite.dll
+    │          Newtonsoft.Json.dll
+    │          Newtonsoft.Json.xml
+    │          PowerCollections.dll
+    │          ProjNet.dll
+    │          SharpMap.dll
+    │          SharpMap.pdb
+    │          SharpMap.UI.dll
+    │          SharpMap.UI.pdb
+    │          SharpMap.UI.xml
+    │          SharpMap.xml
+    │          TrjTools.dll
+    │          TrjTools.dll.config
+    │          TrjTools.pdb
+    │          
+    ├─Index
+    │  └─Grid
+    │          GridEdge.cs
+    │          GridPoint.cs
+    │          GridTrj.cs
+    │          
+    ├─MapMatching
+    │      BaseMM.cs
+    │      MM.cs
+    │      PassbyMM.cs
+    │      
+    ├─obj
+    │  ├─Debug
+    │  │  │  DesignTimeResolveAssemblyReferencesInput.cache
+    │  │  │  TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+    │  │  │  TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+    │  │  │  TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+    │  │  │  TrjTools.csproj.FileListAbsolute.txt
+    │  │  │  TrjTools.csprojResolveAssemblyReference.cache
+    │  │  │  TrjTools.dll
+    │  │  │  TrjTools.pdb
+    │  │  │  
+    │  │  └─TempPE
+    │  └─Release
+    │      │  DesignTimeResolveAssemblyReferencesInput.cache
+    │      │  TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
+    │      │  TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
+    │      │  TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+    │      │  TrjTools.csproj.FileListAbsolute.txt
+    │      │  TrjTools.csprojResolveAssemblyReference.cache
+    │      │  TrjTools.dll
+    │      │  TrjTools.pdb
+    │      │  
+    │      └─TempPE
+    ├─Properties
+    │      AssemblyInfo.cs
+    │      
+    ├─ref
+    ├─RoadNetwork
+    │      Edge.cs
+    │      EdgePath.cs
+    │      GeoPoint.cs
+    │      Graph.cs
+    │      MBR.cs
+    │      MotionVector.cs
+    │      Polyline.cs
+    │      Trajectory.cs
+    │      Vertex.cs
+    │      
+    └─Tools
+            Benchmark.cs
+            ExtendMethods.cs
+            LayerTools.cs
+            Utility.cs
+            

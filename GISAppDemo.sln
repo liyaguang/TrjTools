@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GISAppDemo", "GISAppDemo\GISAppDemo.csproj", "{F7C742BB-B00D-47F1-94DB-7909ED9A244F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrjTools", "TrjTools\TrjTools.csproj", "{38C824BC-A9F8-4296-8D31-CA594BBBD1B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7C742BB-B00D-47F1-94DB-7909ED9A244F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7C742BB-B00D-47F1-94DB-7909ED9A244F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7C742BB-B00D-47F1-94DB-7909ED9A244F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7C742BB-B00D-47F1-94DB-7909ED9A244F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38C824BC-A9F8-4296-8D31-CA594BBBD1B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38C824BC-A9F8-4296-8D31-CA594BBBD1B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38C824BC-A9F8-4296-8D31-CA594BBBD1B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38C824BC-A9F8-4296-8D31-CA594BBBD1B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
