@@ -142,16 +142,69 @@ namespace TrjTools.RoadNetwork
             }
             sw.Close();
         }
-
+        private int detectTrjFileType(string line)
+        {
+            int type = 0;
+            String[] fields = line.Split(new char[] { '\t', ',' });
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            String format = "yyyyMMddHHmmss";
+            DateTime t;
+            if (DateTime.TryParseExact(fields[0], format, provider, DateTimeStyles.None, out t))
+            {
+                type = 1;
+            }
+            return type; 
+        }
         /// <summary>
         /// Load trajectory from a file
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="type">0:original, 1:20120930062459,lat,lng,v,dir,state, 2:t,lat,lng</param>
+        public void Load(String fileName, Graph g = null)
+        {
+            String[] lines = File.ReadAllLines(fileName);
+            if (lines.Length == 0) return;
+            int type = detectTrjFileType(lines[0]);
+            CultureInfo provider = CultureInfo.InvariantCulture;
+            String format = "yyyyMMddHHmmss";
+            foreach (String line in lines)
+            {
+                string[] fields = line.Split(new char[] { '\t', ',' });
+                long time = 0;
+                if (fields.Length >= 3)
+                {
+                    if (type == 0)
+                    {
+                        time = long.Parse(fields[0]);
+                    }
+                    else if (type == 1)
+                    {
+                        DateTime t = DateTime.ParseExact(fields[0], format, provider);
+                        time = t.Ticks / MotionVector.TICKS_PER_SECOND;
+                    }
+                    double lat = double.Parse(fields[1]);
+                    double lng = double.Parse(fields[2]);
+                    MotionVector mv = new MotionVector(new GeoPoint(lat, lng), time);
+                    if (g != null && fields.Length > 3)
+                    {
+                        long eid = long.Parse(fields.Last());
+                        if (eid > 0)
+                        {
+                            mv.e = g.Edges[eid];
+                            mv.type = MotionVector.MatchType.SingleMatched;
+                        }
+                    }
+                    this.Add(mv);
+                }
+            }
+        }
         public void Load(String fileName, int type, Graph g = null)
         {
             //StreamReader sr = new StreamReader(fileName);
             String[] lines = File.ReadAllLines(fileName);
+            if (lines.Length == 0) return;
+            string firstLine = lines[0];
+
             switch (type)
             {
                 case 0:
@@ -219,34 +272,6 @@ namespace TrjTools.RoadNetwork
         /// <summary>
         /// Load trajectory from a file
         /// </summary>
-        /// <param name="fileName"></param>
-        public void Load(String fileName, Graph graph)
-        {
-            StreamReader sr = new StreamReader(fileName);
-            while (!sr.EndOfStream)
-            {
-                String line = sr.ReadLine();
-                String[] fields = line.Split();
-                if (fields.Length >= 3)
-                {
-                    long time = long.Parse(fields[0]);
-                    double lat = double.Parse(fields[1]);
-                    double lng = double.Parse(fields[2]);
-                    MotionVector mv = new MotionVector(new GeoPoint(lat, lng), time);
-                    if (fields.Length > 3)
-                    {
-                        long eid = long.Parse(fields[3]);
-                        if (eid > 0)
-                        {
-                            mv.e = graph.Edges[eid];
-                            mv.type = MotionVector.MatchType.SingleMatched;
-                        }
-                    }
-                    this.Add(mv);
-                }
-            }
-            sr.Close();
-        }
         /// <summary>
         /// Remove outliers. <br/>
         /// We assume that the first mv is not outlier

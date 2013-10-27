@@ -31,13 +31,15 @@ namespace TrjTools.Compress
         public string Serialize()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(moid);
+            long startTime = StartTime;
+            sb.Append(string.Format("{0},{1}", moid, startTime));
             foreach(var item in Items)
             {
                 // long eid = item.RefPoint.eid;
                 if (item.RefPoint.e != null)
                 {
-                    sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t, item.RefPoint.eid, (short)item.RefPoint.distance));
+                    //sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t, item.RefPoint.eid, (short)item.RefPoint.distance));
+                    sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.eid, (short)item.RefPoint.distance));
                     foreach (var p in item.Points)
                     {
                         sb.Append(string.Format("|{0},{1},{2}", p.si, p.rid, p.v));
@@ -45,7 +47,7 @@ namespace TrjTools.Compress
                 }
                 else
                 {
-                    sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t, item.RefPoint.Point.Lat, item.RefPoint.Point.Lng));
+                    sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.Point.Lat, item.RefPoint.Point.Lng));
                 }
             }
             return sb.ToString();
@@ -62,5 +64,17 @@ namespace TrjTools.Compress
         }
         public long moid { get; set; }
         public List<Item> Items { get; set; }
+        public long StartTime
+        {
+            get
+            {
+                long startTime = 0;
+                if (Items.Count > 0)
+                {
+                    startTime = Items[0].RefPoint.t;
+                }
+                return startTime; 
+            }
+        }
     }
 }
