@@ -43,6 +43,8 @@ namespace TrjTools.RoadNetwork
             }
         }
 
+        public long moid { get; set; }
+
         public Trajectory()
             : base()
         {

@@ -7,23 +7,31 @@ using TrjTools.RoadNetwork;
 
 namespace TrjTools.Compress
 {
-    public class CompressedTrj
+    /// <summary>
+    /// Velcocity based compressed trajectory
+    /// </summary>
+    public class VCompressedTrj
     {
         public class Item
         {
             public RefPoint RefPoint { get; set; }
-            public List<CompressedMV> Points { get; set; }
+            public List<VCompressedMV> Points { get; set; }
             public Item()
             {
-                this.Points = new List<CompressedMV>();
+                this.Points = new List<VCompressedMV>();
                 this.RefPoint = null;
             }
         }
-        public CompressedTrj() 
+        public VCompressedTrj() 
         {
             this.Items = new List<Item>();
         }
-        public CompressedTrj(long moid)
+        public VCompressedTrj(string fileName)
+        {
+            this.Items = new List<Item>();
+            throw new NotImplementedException();
+        }
+        public VCompressedTrj(long moid)
         {
             this.moid = moid;
             this.Items = new List<Item>();
@@ -32,14 +40,14 @@ namespace TrjTools.Compress
         {
             StringBuilder sb = new StringBuilder();
             long startTime = StartTime;
-            sb.Append(string.Format("{0},{1}", moid, startTime));
+            sb.AppendLine(string.Format("{0},{1}", moid, startTime));
             foreach(var item in Items)
             {
                 // long eid = item.RefPoint.eid;
                 if (item.RefPoint.e != null)
                 {
                     //sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t, item.RefPoint.eid, (short)item.RefPoint.distance));
-                    sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.eid, (short)item.RefPoint.distance));
+                    sb.AppendLine(string.Format("{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.eid, (short)item.RefPoint.distance));
                     foreach (var p in item.Points)
                     {
                         sb.Append(string.Format("|{0},{1},{2}", p.si, p.rid, p.v));
@@ -47,7 +55,7 @@ namespace TrjTools.Compress
                 }
                 else
                 {
-                    sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.Point.Lat, item.RefPoint.Point.Lng));
+                    sb.AppendLine(string.Format("{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.Point.Lat, item.RefPoint.Point.Lng));
                 }
             }
             return sb.ToString();

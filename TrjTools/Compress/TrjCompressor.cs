@@ -22,12 +22,12 @@ namespace TrjTools.Compress
         /// </summary>
         /// <param name="trj"></param>
         /// <returns></returns>
-        public CompressedTrj Compress_v1(Trajectory trj)
+        public VCompressedTrj Compress_v1(Trajectory trj)
         {
             if (trj.Count == 0) return null;
             List<RefPoint> refPoints = getRefPoints(trj);
-            CompressedTrj cTrj = new CompressedTrj();
-            CompressedTrj.Item item = new CompressedTrj.Item();
+            VCompressedTrj cTrj = new VCompressedTrj();
+            VCompressedTrj.Item item = new VCompressedTrj.Item();
             double dist = 0, appDist = 0;
             Edge lastEdge = refPoints[0].e;
             item.RefPoint = refPoints[0];
@@ -63,14 +63,14 @@ namespace TrjTools.Compress
                     // insert the reference point
                     cTrj.Items.Add(item);
                     // clear
-                    item = new CompressedTrj.Item();
+                    item = new VCompressedTrj.Item();
                     item.RefPoint = cur;
                     dist = 0;
                     appDist = 0;
                 }
                 else
                 {
-                    item.Points.Add(new CompressedMV(si, cur.eid, roundV));
+                    item.Points.Add(new VCompressedMV(si, cur.eid, roundV));
                 }
             }
             cTrj.Items.Add(item);
@@ -81,12 +81,12 @@ namespace TrjTools.Compress
         /// </summary>
         /// <param name="trj"></param>
         /// <returns></returns>
-        public CompressedTrj Compress(Trajectory trj)
+        public VCompressedTrj VelocityBasedCompress(Trajectory trj)
         {
             if (trj.Count == 0) return null;
             List<RefPoint> refPoints = getRefPoints(trj);
-            CompressedTrj cTrj = new CompressedTrj();
-            CompressedTrj.Item item = new CompressedTrj.Item();
+            VCompressedTrj cTrj = new VCompressedTrj();
+            VCompressedTrj.Item item = new VCompressedTrj.Item();
             double dist = 0, appDist = 0;
             Edge lastEdge = refPoints[0].e;
             bool canApproximate = true;
@@ -138,14 +138,14 @@ namespace TrjTools.Compress
                 }
                 if (canApproximate)
                 {
-                    item.Points.Add(new CompressedMV(si, cur.eid, roundV));
+                    item.Points.Add(new VCompressedMV(si, cur.eid, roundV));
                 }
                 else
                 {
                     // insert the reference point
                     cTrj.Items.Add(item);
                     // clear
-                    item = new CompressedTrj.Item();
+                    item = new VCompressedTrj.Item();
                     item.RefPoint = cur;
                     dist = 0;
                     appDist = 0;
@@ -153,6 +153,14 @@ namespace TrjTools.Compress
             }
             cTrj.Items.Add(item);
             return cTrj;
+        }
+
+        public BCompressedTrj BeaconBasedCompress(Trajectory trj)
+        {
+            if (trj.Count == 0) return null;
+            List<RefPoint> refPoints = getRefPoints(trj);
+            BCompressedTrj ctrj = new BCompressedTrj(trj.moid, _maxDev * 2, refPoints);
+            return ctrj;
         }
         private List<RefPoint> getRefPoints(Trajectory trj)
         {
@@ -186,7 +194,7 @@ namespace TrjTools.Compress
             return refPoints;
         }
 
-        public Trajectory Decompress(CompressedTrj ctrj)
+        public Trajectory Decompress(VCompressedTrj ctrj)
         {
             int size = ctrj.Items.Count;
             if (size <= 0) return null;

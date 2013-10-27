@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace TrjTools.Compress
 {
-    public class CompressedMV
+    /// <summary>
+    /// Velocity based compressed MV
+    /// </summary>
+    public class VCompressedMV
     {
         /// <summary>
         /// Sampling interval
@@ -23,7 +26,7 @@ namespace TrjTools.Compress
         /// </summary>
         public byte v { get; set; }
 
-        public CompressedMV(byte si, long rid, byte v)
+        public VCompressedMV(byte si, long rid, byte v)
         {
             this.si = si;
             this.rid = rid;
