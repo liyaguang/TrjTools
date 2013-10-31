@@ -116,6 +116,12 @@ namespace TrjTools.Compress
             Trajectory trj = null;
             throw new NotImplementedException();
         }
+
+        public void Save(string ctrjFileName)
+        {
+            File.WriteAllText(ctrjFileName, this.Serialize());
+        }
+
         public long moid { get; set; }
         public double SegmentLength { get; set; }
         public List<BCompressedMV> Items { get; set; }

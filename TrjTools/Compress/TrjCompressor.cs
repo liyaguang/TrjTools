@@ -162,6 +162,12 @@ namespace TrjTools.Compress
             BCompressedTrj ctrj = new BCompressedTrj(trj.moid, _maxDev * 2, refPoints);
             return ctrj;
         }
+
+        public Trajectory DPCompress(Trajectory trj)
+        {
+            DPCompressor compressor = new DPCompressor(trj, _maxDev);
+            return compressor.Compress();
+        }
         private List<RefPoint> getRefPoints(Trajectory trj)
         {
             if (trj.Count == 0) return null;

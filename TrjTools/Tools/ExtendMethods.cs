@@ -132,6 +132,33 @@ namespace TrjTools.Tools
         {
             return null;
         }
+
+        public static List<Trajectory> Truncate(this Trajectory trj, Envelope box)
+        {
+            List<Trajectory> trjs = new List<Trajectory>();
+            Trajectory subTrj = new Trajectory();
+            int minCount = 128;
+            for (int i = 0; i < trj.Count; ++i)
+            {
+                if (box.Contains(trj[i].point.ToCoordinate()))
+                {
+                    subTrj.Add(trj[i]);
+                }
+                else
+                {
+                    if (subTrj.Count > minCount)
+                    {
+                        trjs.Add(subTrj);
+                    }
+                    subTrj = new Trajectory();
+                }
+            }
+            if (subTrj.Count > minCount)
+            {
+                trjs.Add(subTrj);
+            }
+            return trjs;
+        }
         #endregion Extend Methods
     }
 }

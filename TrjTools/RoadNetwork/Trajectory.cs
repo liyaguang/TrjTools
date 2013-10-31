@@ -365,43 +365,32 @@ namespace TrjTools.RoadNetwork
             return new Trajectory(mvs);
         }
 
-        //public MotionVector At(DateTime time, Graph g = null)
-        //{
-        //    MotionVector result = new MotionVector();
-        //    result.point = GeoPoint.INVALID;
-        //    if (this.Count == 0
-        //        || time < this[0].Time || time > this[this.Count - 1].Time)
-        //    {
-        //        return result;
-        //    }
-        //    for (int i = 1; i < this.Count; i++)
-        //    {
-        //        if (time >= this[i - 1].Time && time <= this[i].Time)
-        //        {
-        //            var mt = new MVTuple();
-        //            mt.Start = this[i - 1];
-        //            mt.End = this[i];
-        //            //get shortest path
-        //            if (g != null)
-        //            {
-        //                if (mt.Start.e != mt.End.e && mt.Start.e != null && mt.End.e != null)
-        //                {
-        //                    var list = g.FindPath(mt.Start.e.End, mt.End.e.Start);
-        //                    if (list != null)
-        //                    {
-        //                        mt.Path = new EdgeList(list);
-        //                    }
-        //                }
-        //            }
-        //            result = mt.projectFrom(time);
-        //            //speed
-        //            double dist = GeoPoint.GetDistance(this[i - 1].point, this[i].point);
-        //            result.v = (float)(dist / (this[i].t - this[i - 1].t));
-        //            break;
-        //        }
-        //    }
-        //    return result;
-        //}
+        public MotionVector At(long t, Graph g = null)
+        {
+            MotionVector result = new MotionVector();
+            result.point = GeoPoint.INVALID;
+            int lo = 0, hi = this.Count - 1;
+            while (lo <= hi)
+            {
+                int mid = lo + ((hi - lo) >> 1);
+                if (t < this[mid].t)
+                {
+                    hi = mid - 1;
+                }
+                else if (t > this[mid].t)
+                {
+                    lo = mid + 1;
+                }
+                else
+                {
+                    return this[mid];
+                }
+            }
+            double ratio = (t - this[hi].t) * 1.0 / (this[lo].t - this[hi].t);
+            result.point.Lat = this[hi].point.Lat + ratio * (this[lo].point.Lat - this[hi].point.Lat);
+            result.point.Lng = this[hi].point.Lng + ratio * (this[lo].point.Lng - this[hi].point.Lng);
+            return result;
+        }
 
         public double SpeedAt(DateTime time)
         {
@@ -422,5 +411,7 @@ namespace TrjTools.RoadNetwork
             }
             return speed;
         }
+
+        
     }
 }

@@ -84,6 +84,7 @@
     <Compile Include="Algorithm\AStar.cs" />
     <Compile Include="Algorithm\RBTree.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Compress\DPCompressor.cs" />
     <Compile Include="Compress\VCompressedMV.cs" />
     <Compile Include="Compress\VCompressedTrj.cs" />
     <Compile Include="Compress\RefPoint.cs" />

@@ -57,7 +57,7 @@ namespace TrjTools.RoadNetwork
         private GridPoint vertexIndex;
         private MBR mbr;
         private double edgeCellSize = 500 * Constants.D_PER_M;
-        private double vertexCellSize = 100 * Constants.D_PER_M;
+        private double vertexCellSize = 50 * Constants.D_PER_M;
 
 
         private long base_id = 100000000000;

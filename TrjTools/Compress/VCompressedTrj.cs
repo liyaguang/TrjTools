@@ -46,7 +46,6 @@ namespace TrjTools.Compress
                 // long eid = item.RefPoint.eid;
                 if (item.RefPoint.e != null)
                 {
-                    //sb.Append(string.Format(":{0},{1},{2}", item.RefPoint.t, item.RefPoint.eid, (short)item.RefPoint.distance));
                     sb.AppendLine(string.Format("{0},{1},{2}", item.RefPoint.t - startTime, item.RefPoint.eid, (short)item.RefPoint.distance));
                     foreach (var p in item.Points)
                     {
