@@ -128,7 +128,7 @@ namespace TrjTools.Compress
                 if (canApproximate)
                 {
                     v = distance / si;
-                    roundV = (byte)(Math.Round(v) / _binSize);
+                    roundV = (byte)(Math.Round(v / _binSize));
                     dist += distance;
                     appDist += roundV * si * _binSize;
                     if (Math.Abs(dist - appDist) >= _maxDev)
