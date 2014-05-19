@@ -93,12 +93,14 @@
     <Compile Include="Compress\BCompressedMV.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Index\Grid\GridEdge.cs" />
-    <Compile Include="Index\Grid\GridPoint.cs" />
+    <Compile Include="Index\Grid\GridVertex.cs" />
     <Compile Include="Index\Grid\GridTrj.cs" />
+    <Compile Include="Index\Grid\GridMultiTrj.cs" />
     <Compile Include="Index\RTree\Node.cs" />
     <Compile Include="Index\RTree\Point.cs" />
-    <Compile Include="Index\RTree\Rectangle.cs" />
+    <Compile Include="Index\RTree\Rectangle3D.cs" />
     <Compile Include="Index\RTree\RTree.cs" />
+    <Compile Include="Index\RTree\Rectangle.cs" />
     <Compile Include="MapMatching\BaseMM.cs" />
     <Compile Include="MapMatching\MM.cs" />
     <Compile Include="MapMatching\PassbyMM.cs" />
@@ -113,9 +115,12 @@
     <Compile Include="RoadNetwork\Trajectory.cs" />
     <Compile Include="RoadNetwork\Vertex.cs" />
     <Compile Include="Tools\Benchmark.cs" />
+    <Compile Include="Tools\IGeoTransformer.cs" />
+    <Compile Include="Tools\Wgs2MgsTransform.cs" />
     <Compile Include="Tools\ExtendMethods.cs" />
     <Compile Include="Tools\LayerTools.cs" />
     <Compile Include="Tools\Utility.cs" />
+    <Compile Include="Tools\Mgs2WgsTransform.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ref\EGIS.ShapeFileLib.dll" />

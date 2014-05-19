@@ -206,7 +206,6 @@ namespace TrjTools.RoadNetwork
             String[] lines = File.ReadAllLines(fileName);
             if (lines.Length == 0) return;
             string firstLine = lines[0];
-
             switch (type)
             {
                 case 0:
@@ -238,7 +237,7 @@ namespace TrjTools.RoadNetwork
                                 double lat = double.Parse(fields[1]);
                                 double lng = double.Parse(fields[2]);
                                 MotionVector mv = new MotionVector(new GeoPoint(lat, lng), time);
-                                mv.orginalString = line;
+                                //mv.orginalString = line;
                                 if (g != null)
                                 {
                                     long eid = long.Parse(fields.Last());
@@ -334,6 +333,7 @@ namespace TrjTools.RoadNetwork
                 }
                 trj.Add(mvs[i]);
             }
+            list.Add(trj);
             return list;
         }
         public EdgePath Path
@@ -412,6 +412,34 @@ namespace TrjTools.RoadNetwork
             return speed;
         }
 
+        public List<GeoPoint> GetParkingPoints()
+        {
+            List<GeoPoint> points = new List<GeoPoint>();
+            double dist = 0, distThreshold = 1;
+            int start = 0, current = 0;
+            long minSeconds = 600;
+            while (current < this.Count - 1)
+            {
+                dist += GeoPoint.GetDistance(this[current].point, this[current + 1].point);
+                if (dist > distThreshold)
+                {
+                    if (this[current + 1].t - this[start].t >= minSeconds)
+                    {
+                        // Parking point
+                        points.Add(this[start].point);
+                    }
+                    start = current + 1;
+                    dist = 0;
+                }
+                ++current;
+            }
+            if (this[current].t - this[start].t >= minSeconds)
+            {
+                points.Add(this[start].point);
+            }
+
+            return points;
+        }
         
     }
 }

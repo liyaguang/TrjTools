@@ -24,6 +24,7 @@ namespace GISAppDemo
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MapForm());
             //Application.Run(new Launcher());
+            //Test.Start();
         }
     }
 }

@@ -126,18 +126,7 @@ namespace TrjTools.MapMatching
                 }
                 if (double.IsNegativeInfinity(highest))
                 {
-                    startPoint = trj[output + 1].point;
-
-                    //Console.WriteLine("Makov is interrupted at idx:{0},({1:.######},{2:.######})", output + 1, startPoint.Lng, startPoint.Lat);
-                    //1. set match result
-                    setMatchResult(T);
-
-                    //2. Set probability
-                    foreach (Edge e in nextStates)
-                    {
-                        double prob = getEmissionProbility(e, startPoint);
-                        U[e.ID] = new Node(prob, e.ID, output + 1, null);
-                    }
+                    saveAndInit(trj, output, T, nextStates, U);
                 }
                 T = U;
                 currentStates = nextStates;
@@ -145,15 +134,33 @@ namespace TrjTools.MapMatching
             setMatchResult(T);
             return new Trajectory(mvs);
         }
+
+        private GeoPoint saveAndInit(Trajectory trj, int output, Dictionary<long, Node> T, HashSet<Edge> nextStates, Dictionary<long, Node> U)
+        {
+            GeoPoint startPoint = trj[output + 1].point;
+
+            //Console.WriteLine("Makov is interrupted at idx:{0},({1:.######},{2:.######})", output + 1, startPoint.Lng, startPoint.Lat);
+            //1. set match result
+            setMatchResult(T);
+
+            //2. Set probability
+            foreach (Edge e in nextStates)
+            {
+                double prob = getEmissionProbility(e, startPoint);
+                U[e.ID] = new Node(prob, e.ID, output + 1, null);
+            } 
+            return startPoint;
+        }
         /// <summary>
         /// Get the simplified ln version of transportation prob
         /// </summary>
+        /// <param name="MAX_DIST">The maximum allowed distance between 2 adjacent node</param>
         /// <param name="e1"></param>
         /// <param name="p1"></param>
         /// <param name="e2"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        private double getTransitionProbility(Edge e1, GeoPoint p1, Edge e2, GeoPoint p2)
+        private double getTransitionProbility(Edge e1, GeoPoint p1, Edge e2, GeoPoint p2, int MAX_DIST = 10000)
         {
             double prob = double.NegativeInfinity;
             double diff = 0;
@@ -162,7 +169,11 @@ namespace TrjTools.MapMatching
             double dist = GeoPoint.GetDistance(p1, p2);
             //double maxDist = Math.Min(dist + 200, dist * 2 + 25);
             double maxDist = Math.Max(dist + 300, dist * 1.5);
-            Polyline route = graph.FindPath(e1, p1, e2, p2, maxDist);
+            Polyline route = null;
+            if (maxDist < MAX_DIST)
+            {
+                route = graph.FindPath(e1, p1, e2, p2, maxDist);
+            }
             if (route != null)
             {
                 double routeLength = route.Length;

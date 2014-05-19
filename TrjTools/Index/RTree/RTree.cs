@@ -911,7 +911,7 @@ namespace TrjTools.Index.RTree
          * contain the nodeIds of all parents up to the root.
          */
 
-        private Rectangle oldRectangle = new Rectangle(0, 0, 0, 0, 0, 0);
+        private Rectangle oldRectangle = new Rectangle(0, 0, 0, 0);
         private void condenseTree(Node<T> l)
         {
             // CT1 [Initialize] Set n=l. Set the list of eliminated

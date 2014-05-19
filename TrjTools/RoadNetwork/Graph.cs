@@ -6,16 +6,18 @@
 //******************************
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using TrjTools.Algorithm;
-using log4net;
-using System.Diagnostics;
-using TrjTools.Index.Grid;
+
 using EGIS.ShapeFileLib;
-using System.Drawing;
+using log4net;
+using TrjTools.Algorithm;
+using TrjTools.Index.Grid;
+using TrjTools.Tools;
 
 
 namespace TrjTools.RoadNetwork
@@ -54,9 +56,10 @@ namespace TrjTools.RoadNetwork
                 return edgeIndex;
             }
         }
-        private GridPoint vertexIndex;
+        private GridVertex vertexIndex;
         private MBR mbr;
-        private double edgeCellSize = 500 * Constants.D_PER_M;
+        //private double edgeCellSize = 500 * Constants.D_PER_M;
+        private double edgeCellSize = 25 * Constants.D_PER_M;
         private double vertexCellSize = 50 * Constants.D_PER_M;
 
 
@@ -219,7 +222,7 @@ namespace TrjTools.RoadNetwork
         private void buildRNIndex()
         {
             //this.edgeIndex = new GridEdge(edges.Values, mbr, edgeCellSize);
-            this.vertexIndex = new GridPoint(vertices.Values, mbr, vertexCellSize);
+            this.vertexIndex = new GridVertex(vertices.Values, mbr, vertexCellSize);
         }
         /// <summary>
         /// Check if edge is single direction
@@ -361,6 +364,52 @@ namespace TrjTools.RoadNetwork
                 {
                     geos.Add(p.Lat + offsetLat);
                     geos.Add(p.Lng + offsetLng);
+                }
+                sw.WriteLine("{0}\t{1}", e.ID, String.Join("\t", geos));
+            }
+            sw.Close();
+        }
+
+        public void SaveMapData(String dir, IGeoTransformer converter)
+        {
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            String vertexFileName = Path.Combine(dir, "vertices.txt");
+            String edgeFileName = Path.Combine(dir, "edges.txt");
+            String geoFileName = Path.Combine(dir, "geos.txt");
+            StreamWriter sw = null;
+            if (File.Exists(vertexFileName) || File.Exists(edgeFileName) || File.Exists(geoFileName))
+            {
+                Console.WriteLine("Already Exists, Quiting...");
+                return;
+            }
+            // Save vertices.txt
+            sw = new StreamWriter(vertexFileName);
+            foreach (var v in Vertices.Values)
+            {
+                GeoPoint newV = converter.Transform(v.Point);
+                sw.WriteLine("{0}\t{1}\t{2}", v.ID, newV.Lat, newV.Lng);
+            }
+            sw.Close();
+            // Save edges.txt
+            sw = new StreamWriter(edgeFileName);
+            foreach (var e in Edges.Values)
+            {
+                sw.WriteLine("{0}\t{1}\t{2}", e.ID, e.Start.ID, e.End.ID);
+            }
+            sw.Close();
+            // Save geos.txt
+            sw = new StreamWriter(geoFileName);
+            foreach (var e in Edges.Values)
+            {
+                List<double> geos = new List<double>();
+                foreach (var p in e.Geo.Points)
+                {
+                    var newP = converter.Transform(p);
+                    geos.Add(newP.Lat);
+                    geos.Add(newP.Lng);
                 }
                 sw.WriteLine("{0}\t{1}", e.ID, String.Join("\t", geos));
             }

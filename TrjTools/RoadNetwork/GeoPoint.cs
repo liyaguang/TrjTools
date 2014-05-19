@@ -50,6 +50,12 @@ namespace TrjTools.RoadNetwork
             this._lat = (int)(lat * DIVISOR);
             this._lng = (int)(lng * DIVISOR);
         }
+        public MBR GetMBR(double radius = 0)
+        {
+            double lngRadius = radius / M_PER_LNG;
+            double latRadius = radius / M_PER_LAT;
+            return new MBR(Lng - lngRadius, Lat - latRadius, Lng + lngRadius, Lat + latRadius);
+        }
         public bool IsValid
         {
             get

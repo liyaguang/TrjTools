@@ -39,6 +39,7 @@
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.miOpenShp = new System.Windows.Forms.MenuItem();
+            this.miAddShape = new System.Windows.Forms.MenuItem();
             this.miOpenTrj = new System.Windows.Forms.MenuItem();
             this.miLoadMap = new System.Windows.Forms.MenuItem();
             this.miExit = new System.Windows.Forms.MenuItem();
@@ -65,12 +66,17 @@
             this.miFindVertex = new System.Windows.Forms.MenuItem();
             this.miMapmatching = new System.Windows.Forms.MenuItem();
             this.miCompare = new System.Windows.Forms.MenuItem();
+            this.miStatistic = new System.Windows.Forms.MenuItem();
             this.btnTest = new System.Windows.Forms.MenuItem();
+            this.miTest2 = new System.Windows.Forms.MenuItem();
             this.miOption = new System.Windows.Forms.MenuItem();
             this.miAutoScale = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.miSaveGeo = new System.Windows.Forms.MenuItem();
             this.miAbout = new System.Windows.Forms.MenuItem();
             this.lbPosition = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.miOpenShape3 = new System.Windows.Forms.MenuItem();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -176,6 +182,7 @@
             this.menuItem2,
             this.menuItem6,
             this.miOption,
+            this.menuItem8,
             this.miAbout});
             // 
             // menuItem1
@@ -183,6 +190,8 @@
             this.menuItem1.Index = 0;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.miOpenShp,
+            this.miAddShape,
+            this.miOpenShape3,
             this.miOpenTrj,
             this.miLoadMap,
             this.miExit});
@@ -194,21 +203,27 @@
             this.miOpenShp.Text = "Open Shape(&S)";
             this.miOpenShp.Click += new System.EventHandler(this.miOpenShp_Click);
             // 
+            // miAddShape
+            // 
+            this.miAddShape.Index = 1;
+            this.miAddShape.Text = "Open Shape 2(&S)";
+            this.miAddShape.Click += new System.EventHandler(this.miAddShape_Click);
+            // 
             // miOpenTrj
             // 
-            this.miOpenTrj.Index = 1;
+            this.miOpenTrj.Index = 3;
             this.miOpenTrj.Text = "Open Trajectory(&T)";
             this.miOpenTrj.Click += new System.EventHandler(this.miOpenTrj_Click);
             // 
             // miLoadMap
             // 
-            this.miLoadMap.Index = 2;
+            this.miLoadMap.Index = 4;
             this.miLoadMap.Text = "Load Map(&L)";
             this.miLoadMap.Click += new System.EventHandler(this.miLoadMap_Click);
             // 
             // miExit
             // 
-            this.miExit.Index = 3;
+            this.miExit.Index = 5;
             this.miExit.Text = "Exit(&E)";
             this.miExit.Click += new System.EventHandler(this.miExit_Click);
             // 
@@ -319,7 +334,9 @@
             this.menuItem5,
             this.miMapmatching,
             this.miCompare,
-            this.btnTest});
+            this.miStatistic,
+            this.btnTest,
+            this.miTest2});
             this.menuItem6.Text = "Tools(&T)";
             // 
             // menuItem7
@@ -381,11 +398,23 @@
             this.miCompare.Text = "Compare(&C)";
             this.miCompare.Click += new System.EventHandler(this.miCompare_Click);
             // 
+            // miStatistic
+            // 
+            this.miStatistic.Index = 4;
+            this.miStatistic.Text = "Statistics(&S)";
+            this.miStatistic.Click += new System.EventHandler(this.miStatistic_Click);
+            // 
             // btnTest
             // 
-            this.btnTest.Index = 4;
+            this.btnTest.Index = 5;
             this.btnTest.Text = "Test(&T)";
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // miTest2
+            // 
+            this.miTest2.Index = 6;
+            this.miTest2.Text = "Test2(&O)";
+            this.miTest2.Click += new System.EventHandler(this.miTest2_Click);
             // 
             // miOption
             // 
@@ -401,9 +430,22 @@
             this.miAutoScale.Text = "Auto Scale(&A)";
             this.miAutoScale.Click += new System.EventHandler(this.miAutoScale_Click);
             // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 4;
+            this.menuItem8.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.miSaveGeo});
+            this.menuItem8.Text = "Action(&C)";
+            // 
+            // miSaveGeo
+            // 
+            this.miSaveGeo.Index = 0;
+            this.miSaveGeo.Text = "SaveGeo(&S)";
+            this.miSaveGeo.Click += new System.EventHandler(this.miSaveGeo_Click);
+            // 
             // miAbout
             // 
-            this.miAbout.Index = 4;
+            this.miAbout.Index = 5;
             this.miAbout.Text = "About(&A)";
             this.miAbout.Click += new System.EventHandler(this.miAbout_Click);
             // 
@@ -428,6 +470,12 @@
             this.groupBox1.TabIndex = 17;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Status";
+            // 
+            // miOpenShape3
+            // 
+            this.miOpenShape3.Index = 2;
+            this.miOpenShape3.Text = "Open Shape 3(&S)";
+            this.miOpenShape3.Click += new System.EventHandler(this.miOpenShape3_Click);
             // 
             // MapForm
             // 
@@ -494,5 +542,11 @@
         private System.Windows.Forms.MenuItem menuItem5;
         private System.Windows.Forms.MenuItem miFindEdge;
         private System.Windows.Forms.MenuItem miFindVertex;
+        private System.Windows.Forms.MenuItem miStatistic;
+        private System.Windows.Forms.MenuItem miTest2;
+        private System.Windows.Forms.MenuItem miAddShape;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem miSaveGeo;
+        private System.Windows.Forms.MenuItem miOpenShape3;
     }
 }

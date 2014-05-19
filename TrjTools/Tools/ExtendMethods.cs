@@ -26,6 +26,7 @@ namespace TrjTools.Tools
         }
         public static LineString ToLineString(this Trajectory trj)
         {
+            if (trj.Count < 2) return null;
             List<Coordinate> coords = new List<Coordinate>();
             foreach (MotionVector p in trj)
             {

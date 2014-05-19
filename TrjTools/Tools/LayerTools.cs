@@ -21,6 +21,7 @@ using BruTile.Web.Wms;
 using SharpMap.Layers;
 using TrjTools.RoadNetwork;
 
+
 namespace TrjTools.Tools
 {
     public static class LayerTools
@@ -173,7 +174,11 @@ namespace TrjTools.Tools
             y = (yy + base_y) / base_m;
             return new Point(x, y);
         }
-        
+        public static TrjTools.Index.RTree.Rectangle ToRectangle(this MBR mbr)
+        {
+            TrjTools.Index.RTree.Rectangle rect = new TrjTools.Index.RTree.Rectangle(mbr.MinLng, mbr.MinLat, mbr.MaxLng, mbr.MaxLat);
+            return rect;
+        }
 
     }
 }

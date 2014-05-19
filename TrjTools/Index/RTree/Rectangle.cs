@@ -22,7 +22,7 @@ namespace TrjTools.Index.RTree
          * Number of dimensions in a rectangle. In theory this
          * could be exended to three or more dimensions.
          */
-        internal const int DIMENSIONS = 3;
+        internal const int DIMENSIONS = 2;
 
         /**
          * array containing the minimum value for each dimension; ie { min(x), min(y) }
@@ -42,11 +42,11 @@ namespace TrjTools.Index.RTree
          * @param x2 coordinate of the opposite corner
          * @param y2 (see x2)
          */
-        public Rectangle(double x1, double y1, double x2, double y2, double z1, double z2)
+        public Rectangle(double x1, double y1, double x2, double y2)
         {
             min = new double[DIMENSIONS];
             max = new double[DIMENSIONS];
-            set(x1, y1, x2, y2, z1, z2);
+            set(x1, y1, x2, y2);
         }
 
         /**
@@ -77,14 +77,12 @@ namespace TrjTools.Index.RTree
           * @param x2 coordinate of the opposite corner
           * @param y2 (see x2)
           */
-        internal void set(double x1, double y1, double x2, double y2, double z1, double z2)
+        internal void set(double x1, double y1, double x2, double y2)
         {
             min[0] = Math.Min(x1, x2);
             min[1] = Math.Min(y1, y2);
-            min[2] = Math.Min(z1, z2);
             max[0] = Math.Max(x1, x2);
             max[1] = Math.Max(y1, y2);
-            max[2] = Math.Max(z1, z2);
         }
 
         /**

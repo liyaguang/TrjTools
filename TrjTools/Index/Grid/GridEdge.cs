@@ -162,14 +162,15 @@ namespace TrjTools.Index.Grid
                 bool got = dict.TryGetValue(cands[i], out edges);
                 if (got)
                 {
-                    int count = edges.Count;
-                    for (int j = 0; j < count; j++)
-                    {
-                        if (edges[j].Dist2From(p) <= radius2)
-                        {
-                            result.Add(edges[j]);
-                        }
-                    }
+                    //int count = edges.Count;
+                    //for (int j = 0; j < count; j++)
+                    //{
+                    //    if (edges[j].Dist2From(p) <= radius2)
+                    //    {
+                    //        result.Add(edges[j]);
+                    //    }
+                    //}
+                    result = new HashSet<Edge>(edges);
                 }
             }
             return result;

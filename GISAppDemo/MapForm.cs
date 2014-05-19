@@ -31,16 +31,25 @@ using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
 using TrjTools.MapMatching;
+using GISAppDemo.TestCases;
 
 namespace GISAppDemo
 {
     public partial class MapForm : Form, IMapViewer,IGraphProvider
     {
+        public enum PointType
+        {
+            Image = 1,
+            GreenPoint = 2,
+            RedPoint = 3
+        }
         /// <summary>
         /// Map layers
         /// </summary>
         private Dictionary<string, TileLayer> m_layers;
         private GeometryProvider outputProvider = new GeometryProvider(new List<IGeometry>());
+        private GeometryProvider greenPointProvider = new GeometryProvider(new List<IGeometry>());
+        private GeometryProvider redPointProvider = new GeometryProvider(new List<IGeometry>());
         private GeometryProvider stdOutputProvider = new GeometryProvider(new List<IGeometry>());
         private GeometryProvider markerProvider = new GeometryProvider(new List<IGeometry>());
         private Timer m_timer = new Timer();
@@ -50,13 +59,19 @@ namespace GISAppDemo
         //Layers
         VectorLayer markerLayer = null;
         VectorLayer outputLayer = null;
+        VectorLayer greenPointLayer = null;
+        VectorLayer redPointLayer = null;
         VectorLayer stdOutputLayer = null;
         VectorLayer shapeLayer = null;
+        VectorLayer shapeLayer2 = null;
+        VectorLayer shapeLayer3 = null;
         LabelLayer edgeIdLayer = null;
         //Graph
         //private static string DATASET_DIR = Path.Combine(Constants.MAP_DIR, "WA");
         //private string MAP_DIR = Path.Combine(Constants.MAP_DIR, "Beijing_2011");
-        private string MAP_DIR = Path.Combine(Constants.MAP_DIR, "Beijing_2011");
+        //private string MAP_DIR = Path.Combine(Constants.MAP_DIR, "Beijing_2011_Unidirectional2");
+        private static string MAP_NAME = "Beijing_trust_oneside_no_dev";
+        private string MAP_DIR = Path.Combine(Constants.MAP_DIR, MAP_NAME);
        
         private Graph m_graph = null;
 
@@ -75,7 +90,8 @@ namespace GISAppDemo
         private bool auto_zoom = true;
 
         //Files
-        String shpFileName = Path.Combine(Constants.DATA_DIR, "map\\Beijing_2011\\beijing.shp");
+        //String shpFileName = Path.Combine(Constants.MAP_DIR, "Beijing_2011_Unidirectional2", "beijing.shp");
+        String shpFileName = Path.Combine(Constants.MAP_DIR, MAP_NAME, "beijing.shp");
 
         //private Timer m_timer;
         public MapForm()
@@ -110,8 +126,8 @@ namespace GISAppDemo
             outputLayer.Style.Symbol = GISAppDemo.Properties.Resources.g_arrow;
             outputLayer.Style.Line.Color = Color.FromArgb(120, Color.Cyan);
             outputLayer.Style.Line.Width = 3.0F;
-            //Color tRed = Color.FromArgb(128, Color.Red);
-            //outputLayer.Style.Fill = new SolidBrush(tRed);
+            Color tRed2 = Color.FromArgb(128, Color.Red);
+            outputLayer.Style.Fill = new SolidBrush(tRed2);
             outputLayer.DataSource = outputProvider;
 
 
@@ -122,6 +138,19 @@ namespace GISAppDemo
             stdOutputLayer.Style.Line.Width = 3.0F;
             stdOutputLayer.DataSource = stdOutputProvider;
 
+            // green point layer
+            greenPointLayer = new VectorLayer("GreenPoint");
+            greenPointLayer.Style.PointColor = new SolidBrush(Color.FromArgb(200, Color.Green));
+            greenPointLayer.Style.PointSize = 6;
+            greenPointLayer.DataSource = greenPointProvider;
+
+            // red point layer
+            redPointLayer = new VectorLayer("RedPoint");
+            redPointLayer.Style.PointColor = new SolidBrush(Color.FromArgb(200, Color.Red));
+            redPointLayer.Style.PointSize = 10;
+            redPointLayer.DataSource = redPointProvider;
+
+
             //Shape Layer
             shapeLayer = new SharpMap.Layers.VectorLayer("Shape");
             shapeLayer.DataSource = new SharpMap.Data.Providers.ShapeFile(shpFileName, true);
@@ -129,12 +158,46 @@ namespace GISAppDemo
             shapeLayer.Style.Fill = new SolidBrush(Color.Green);
             //Set the polygons to have a black outline
             shapeLayer.Style.Outline = Pens.Black;
-            shapeLayer.Style.Line.Color = Color.Navy;
+            //shapeLayer.Style.Line.Color = Color.Navy;
+            //shapeLayer.Style.Line.Color = Color.FromArgb(200, Color.Gray);
+            shapeLayer.Style.Line.Color = Color.FromArgb(200, Color.Navy);
             shapeLayer.Style.Line.Width = 1;
             shapeLayer.Style.PointSize = 2;
             shapeLayer.Style.PointColor = new SolidBrush(Color.Blue);
             shapeLayer.SRID = 4326;
             shapeLayer.CoordinateTransformation = LayerTools.Wgs84toGoogleMercator;
+
+            // Shape Layer 2
+            shapeLayer2 = new SharpMap.Layers.VectorLayer("Shape_2");
+            shapeLayer2.DataSource = new SharpMap.Data.Providers.ShapeFile(shpFileName, true);
+            //Set fill-style to green
+            shapeLayer2.Style.Fill = new SolidBrush(Color.Green);
+            //Set the polygons to have a black outline
+            shapeLayer2.Style.Outline = Pens.Black;
+            //shapeLayer.Style.Line.Color = Color.Navy;
+            //shapeLayer.Style.Line.Color = Color.FromArgb(200, Color.Gray);
+            shapeLayer2.Style.Line.Color = Color.FromArgb(200, Color.Navy);
+            shapeLayer2.Style.Line.Width = 2;
+            shapeLayer2.Style.PointSize = 7;
+            shapeLayer2.Style.PointColor = new SolidBrush(Color.Green);
+            shapeLayer2.SRID = 4326;
+            shapeLayer2.CoordinateTransformation = LayerTools.Wgs84toGoogleMercator;
+
+            // Shape Layer 3
+            shapeLayer3 = new SharpMap.Layers.VectorLayer("Shape_3");
+            shapeLayer3.DataSource = new SharpMap.Data.Providers.ShapeFile(shpFileName, true);
+            //Set fill-style to red
+            shapeLayer3.Style.Fill = new SolidBrush(Color.FromArgb(128, Color.Red));
+            //Set the polygons to have a black outline
+            shapeLayer3.Style.Outline = Pens.Black;
+            //shapeLayer.Style.Line.Color = Color.Navy;
+            //shapeLayer.Style.Line.Color = Color.FromArgb(200, Color.Gray);
+            shapeLayer3.Style.Line.Color = Color.FromArgb(200, Color.Navy);
+            shapeLayer3.Style.Line.Width = 2;
+            shapeLayer3.Style.PointSize = 7;
+            shapeLayer3.Style.PointColor = new SolidBrush(Color.Green);
+            shapeLayer3.SRID = 4326;
+            shapeLayer3.CoordinateTransformation = LayerTools.Wgs84toGoogleMercator;
 
             //edgeid layer
             edgeIdLayer = new LabelLayer("EdgeId");
@@ -155,9 +218,11 @@ namespace GISAppDemo
             //Add Beijing Map
             this.mbMap.Map.Layers.Add(shapeLayer);
             shapeLayer.Enabled = miShowShapeLayer.Checked;
+
+           
             
             // Edgeid layer
-            this.mbMap.Map.Layers.Add(edgeIdLayer);
+            //this.mbMap.Map.Layers.Add(edgeIdLayer);
             edgeIdLayer.Enabled = miShowEdgeId.Checked && miShowShapeLayer.Checked;
 
             //Add the static layer for symbol
@@ -168,6 +233,8 @@ namespace GISAppDemo
 
             //Add std output layer
             this.mbMap.Map.Layers.Add(stdOutputLayer);
+            this.mbMap.Map.Layers.Add(greenPointLayer);
+            this.mbMap.Map.Layers.Add(redPointLayer);
 
             //Initialize the timer
             initTimer();
@@ -180,9 +247,11 @@ namespace GISAppDemo
 
             IMathTransform mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
             Envelope geom = GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformBox(
+                //new Envelope(-122.298, -123.399, 46.9695, 47.9896),
                 new Envelope(116.298, 116.399, 39.9695, 39.9896),
                 mathTransform);
             this.mbMap.Map.ZoomToBox(geom);
+            //this.mbMap.Map.ZoomToBox(shapeLayer.Envelope);
             RefreshMap();
         }
 
@@ -469,11 +538,16 @@ namespace GISAppDemo
             {
                 // outputFileDir = f.SelectedPath + "\\";
                 //MessageBox.Show(f.SelectedPath);
-                Trajectory trj = new Trajectory(f.FileName, 2);
+                //Trajectory trj = new Trajectory(f.FileName, 1, graph);
+                Trajectory trj = new Trajectory(f.FileName, 1);
+                var transform = new Wgs2MgsTransform();
                 drawTrj(trj);
-                //MM mm = new MM(graph);
+                trj = transform.Transform(trj);
+                drawTrj(trj);
+                MM mm = new MM(graph);
                 //var newTrj = mm.match(trj);
-                //drawPath(newTrj.Path.Edges);
+                trj = mm.match(trj);
+                drawPath(trj.Path.Edges);
             }
             
         }
@@ -536,6 +610,119 @@ namespace GISAppDemo
             CmpForm frm = new CmpForm(this);
             frm.Show();
         }
+
+
+        private void miFindEdge_Click(object sender, EventArgs e)
+        {
+            InputDialog dialog = new InputDialog();
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                long eid;
+                if (long.TryParse(dialog.Result, out eid))
+                {
+                    drawStdLine(eid);
+                }
+            }
+        }
+
+        private void miFindVertex_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void miStatistic_Click(object sender, EventArgs e)
+        {
+            StatisticsForm frm = new StatisticsForm(this);
+            frm.Show();
+        }
+
+        private void miTest2_Click(object sender, EventArgs e)
+        {
+            TrajAndHotSpotTest.GenerateParkingRegionShape();
+            //var trjs = TrajAndHotSpotTest.mergeBeijingTrjDir(dir, targetDir);
+            //// save 
+            //foreach (var p in trjs)
+            //{
+            //    p.Value.Save(Path.Combine(targetDir, p.Key + ".trj"));
+            //}
+            //return;
+            //// draw
+            //int count = 0;
+            //foreach (var p in trjs)
+            //{
+            //    foreach(var trj in p.Value.Separate(300))
+            //    {
+            //        count++;
+            //        drawTrj(trj);
+            //        if (count % 100 == 0)
+            //        {
+            //            Console.WriteLine("{0}...", count);
+            //        }
+            //    }
+            //    if (count > 1000) break;
+            //}
+        }
+
+        private void miAddShape_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog f = new OpenFileDialog();
+            OpenFileDialog f = new OpenFileDialog();
+            //f.InitialDirectory = Directory.GetCurrentDirectory();
+            f.FileName = shpFileName;
+            f.Filter = "Shape Files (.shp)|*.shp|All Files (*.*)|*.*";
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                // outputFileDir = f.SelectedPath + "\\";
+                //MessageBox.Show(f.SelectedPath);
+                shpFileName = f.FileName;
+                shapeLayer2.DataSource = new SharpMap.Data.Providers.ShapeFile(shpFileName, true);
+                this.mbMap.Map.Layers.Add(shapeLayer2);
+                shapeLayer2.Enabled = miShowShapeLayer.Checked;
+                //Disable bglayer
+                //m_currentLayer.Enabled = false;
+                mbMap.Map.ZoomToBox(shapeLayer2.Envelope);
+            }
+        }
+
+        private void miSaveGeo_Click(object sender, EventArgs e)
+        {
+            string fileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart",
+                "stat", "parkingRegion.txt");
+            StreamWriter sw = new StreamWriter(fileName);
+            foreach (var geo in outputProvider.Geometries)
+            {
+                List<string> points = new List<string>();
+                foreach (var coor in geo.Coordinates)
+                {
+                    Point point = (Point)GeometryTransform.TransformGeometry(new Point(coor),
+                        LayerTools.GoogleMercatorToWgs84.MathTransform, geofactory);
+                    points.Add(string.Format("{0},{1}", point.Y, point.X));
+                }
+                sw.WriteLine(String.Join(",", points.ToArray()));
+            }
+            sw.Close();
+        }
+
+        private void miOpenShape3_Click(object sender, EventArgs e)
+        {
+            //OpenFileDialog f = new OpenFileDialog();
+            OpenFileDialog f = new OpenFileDialog();
+            //f.InitialDirectory = Directory.GetCurrentDirectory();
+            f.FileName = shpFileName;
+            f.Filter = "Shape Files (.shp)|*.shp|All Files (*.*)|*.*";
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                // outputFileDir = f.SelectedPath + "\\";
+                //MessageBox.Show(f.SelectedPath);
+                shpFileName = f.FileName;
+                shapeLayer3.DataSource = new SharpMap.Data.Providers.ShapeFile(shpFileName, true);
+                this.mbMap.Map.Layers.Add(shapeLayer3);
+                shapeLayer3.Enabled = miShowShapeLayer.Checked;
+                //Disable bglayer
+                //m_currentLayer.Enabled = false;
+                mbMap.Map.ZoomToBox(shapeLayer3.Envelope);
+            }
+        }
         #endregion MenuItems_Click
 
         #region Draw_Methods
@@ -562,6 +749,7 @@ namespace GISAppDemo
 
         private void drawLine(LineString line)
         {
+            if (line == null) return;
             line = (LineString)GeometryTransform.TransformGeometry(line, LayerTools.Wgs84toGoogleMercator.MathTransform, geofactory);
             outputProvider.Geometries.Add(line);
             outputProvider.Geometries.Add(line.EndPoint);
@@ -571,7 +759,9 @@ namespace GISAppDemo
 
         private void drawTrj(Trajectory trj)
         {
-            drawLine(trj.ToLineString());
+            var line = trj.ToLineString();
+            if (line == null) return;
+            drawLine(line);
             List<Point> points = new List<Point>();
             for (int i = 0; i < trj.Count; ++i)
             {
@@ -805,18 +995,36 @@ namespace GISAppDemo
             RefreshMap();
         }
 
-        private void drawPoint(IEnumerable<Point> points)
+        public void drawPoint(IEnumerable<Point> points, PointType type = PointType.Image)
         {
             foreach (Point p in points)
             {
                 Point tmp_p = (Point)GeometryTransform.TransformGeometry(p, LayerTools.Wgs84toGoogleMercator.MathTransform, geofactory);
-                markerProvider.Geometries.Add(tmp_p);
+                switch (type)
+                {
+                    case PointType.Image:
+                        {
+                            markerProvider.Geometries.Add(tmp_p);
+                            break;
+                        }
+                    case PointType.GreenPoint:
+                        {
+                            greenPointProvider.Geometries.Add(tmp_p);
+                            break;
+                        }
+                    case PointType.RedPoint:
+                        {
+                            redPointProvider.Geometries.Add(tmp_p);
+                            break;
+                        }
+                }
                 // include(tmp_p);
             }
             RefreshMap();
         }
 
         #endregion Draw_Methods
+
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -834,12 +1042,12 @@ namespace GISAppDemo
                     }
                 case Keys.P:
                     {
-                        btnDrawPoint_Click(null, null);
+                        miDrawPoint_Click(null, null);
                         break;
                     }
                 case Keys.L:
                     {
-                        btnDrawLine_Click(null, null);
+                        miDrawPolygon_Click(null, null);
                         break;
                     }
                 case Keys.E:
@@ -902,6 +1110,8 @@ namespace GISAppDemo
             outputProvider.Geometries.Clear();
             stdOutputProvider.Geometries.Clear();
             markerProvider.Geometries.Clear();
+            greenPointProvider.Geometries.Clear();
+            redPointProvider.Geometries.Clear();
         }
 
         public void RefreshMap()
@@ -943,22 +1153,28 @@ namespace GISAppDemo
             }
         }
 
-        private void miFindEdge_Click(object sender, EventArgs e)
+
+        #region Test_Methods
+        private void drawParkingPoints()
         {
-            InputDialog dialog = new InputDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            string dir = Path.Combine(Constants.DATA_DIR, "beijingTrj");
+            string targetDir = Path.Combine(Constants.DATA_DIR, "beijingTrjPart");
+            var dict = TrajAndHotSpotTest.GetParkingPoints(targetDir);
+            List<Point> points = new List<Point>();
+            foreach (var pair in dict)
             {
-                long eid;
-                if (long.TryParse(dialog.Result, out eid))
+                foreach (var point in pair.Value)
                 {
-                    drawStdLine(eid);
+                    points.Add(point.ToPoint());
                 }
             }
+            drawPoint(points, PointType.GreenPoint);
         }
 
-        private void miFindVertex_Click(object sender, EventArgs e)
+        private void generateParkingRegions()
         {
 
         }
+        #endregion Test_Methods
     }
 }
