@@ -15,7 +15,7 @@ using System.Diagnostics;
 
 namespace TrjTools.Index.Grid
 {
-    public class GridPoint
+    public class GridVertex
     {
         private ILog logger = LogManager.GetLogger(typeof(GridEdge).FullName);
 
@@ -26,7 +26,7 @@ namespace TrjTools.Index.Grid
         private readonly double cellSize;
         private readonly MBR mbr;
 
-        public GridPoint(IEnumerable<Vertex> vertices, MBR mbr, double cellSize)
+        public GridVertex(IEnumerable<Vertex> vertices, MBR mbr, double cellSize)
         {
             nCol = (int)(Math.Ceiling(mbr.Width / cellSize));
             nRow = (int)(Math.Ceiling(mbr.Height / cellSize));
