@@ -9,6 +9,7 @@ using TrjTools.RoadNetwork;
 using TrjTools.MapMatching;
 using TrjTools.Index.Grid;
 using EGIS.ShapeFileLib;
+using TrjTools.Tools;
 
 namespace GISAppDemo.TestCases
 {
@@ -17,11 +18,12 @@ namespace GISAppDemo.TestCases
         public static void DoTest()
         {
             //string dir = Path.Combine(Constants.DATA_DIR, "beijingTrj");
-            string targetDir = Path.Combine(Constants.DATA_DIR, "beijingTrjPart");
+            //string targetDir = Path.Combine(Constants.DATA_DIR, "beijingTrjPart");
             ////getBeijingTrjDir(dir, targetDir);
             //mergeBeijingTrjDir(dir, targetDir);
             //generateEdgeShape(targetDir);
-            GetParkingPoints(targetDir);
+            //GetParkingPoints(targetDir);
+            GenerateThreeShapes();
         }
         class FirstCommaFieldComparer : IEqualityComparer<string>
         {
@@ -205,7 +207,7 @@ namespace GISAppDemo.TestCases
             }
             return fullPath;
         }
-        private static void generateEdgeShape(string path)
+        private static void GenerateEdgeShape(string path, string shapeFileName, bool addDev = false)
         {
             var graph = MapLoader.Load("Beijing_trust_oneside_no_dev");
             // read trjs
@@ -230,8 +232,7 @@ namespace GISAppDemo.TestCases
                 }
             }
             // Generate shapefile
-            string shapeFile = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "edges.shp");
-            setAsShapeFile(edgeDevicesDict, graph, shapeFile);
+            setAsShapeFile(edgeDevicesDict, graph, shapeFileName, addDev);
             StringBuilder sb = new StringBuilder();
             foreach (var p in edgeDevicesDict.ToList().OrderByDescending(a => a.Value.Count))
             {
@@ -241,12 +242,13 @@ namespace GISAppDemo.TestCases
             File.WriteAllText(outputFileName, sb.ToString());
         }
 
-        private static void setAsShapeFile(Dictionary<long, HashSet<string>> edgeDevicesDict, Graph graph, string fileName)
+        private static void setAsShapeFile(Dictionary<long, HashSet<string>> edgeDevicesDict, Graph graph, string fileName, bool addDev = false)
         {
             //写入文件
             String rootDir = Path.GetDirectoryName(fileName);
             String shapeFileName = Path.GetFileNameWithoutExtension(fileName);
             ShapeType shapeType = ShapeType.PolyLine;
+            var transform = new Wgs2MgsTransform();
             int threshold = 1;
             DbfFieldDesc[] fields = new DbfFieldDesc[] 
             { 
@@ -268,13 +270,35 @@ namespace GISAppDemo.TestCases
                 List<PointF> vertices = new List<PointF>();
                 for (int i = 0; i < e.Geo.Points.Count; i++)
                 {
-                    float lng = (float)(e.Geo.Points[i].Lng);
-                    float lat = (float)(e.Geo.Points[i].Lat);
+                    GeoPoint point = e.Geo.Points[i];
+                    if (addDev)
+                    {
+                        point = transform.Transform(point);
+                    }
+                    float lng = (float)(point.Lng);
+                    float lat = (float)(point.Lat);
                     vertices.Add(new PointF(lng, lat));
                 }
                 sfw.AddRecord(vertices.ToArray(), vertices.Count, fieldData);
             }
             sfw.Close();
+        }
+        public static void GenerateParkingPointsShape(string path, string shapeFileName, bool addDev = false)
+        {
+            var graph = MapLoader.Load("Beijing_trust_oneside_no_dev");
+            // read trjs
+            var trjs = readTrjs(path, graph);
+            var parkPointsDict = new Dictionary<string, List<GeoPoint>>();
+            var points = new List<GeoPoint>();
+            foreach (var p in trjs.OrderByDescending(a => a.Value.Count))
+            {
+                var ps = p.Value.GetParkingPoints();
+                // remove the point not in beijing
+                ps = filterParkingPoints(ps);
+                points.AddRange(ps);
+                parkPointsDict[p.Key] = ps;
+            }
+            setParkingPointsAsShapeFile(points, shapeFileName, addDev);
         }
         public static Dictionary<string, List<GeoPoint>> GetParkingPoints(string path)
         {
@@ -286,15 +310,15 @@ namespace GISAppDemo.TestCases
             foreach(var p in trjs.OrderByDescending(a => a.Value.Count))
             {
                 var ps = p.Value.GetParkingPoints();
+                // remove the point not in beijing
+                ps = filterParkingPoints(ps);
                 points.AddRange(ps);
                 parkPointsDict[p.Key] = ps;
             }
-            // remove the point not in beijing
-            points = filterParkingPoints(points);
             //string fileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "stat", "parkingPoints.txt");
             //saveParkingPoints(parkPointsDict, fileName);
-            string shapeFile = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "parkingPoints.shp");
-            setParkingPointsAsShapeFile(points, shapeFile);
+            string shapeFile = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "parkingPoints_dev.shp");
+            setParkingPointsAsShapeFile(points, shapeFile, true);
             return parkPointsDict;
         }
 
@@ -325,12 +349,13 @@ namespace GISAppDemo.TestCases
             }
             return result;
         }
-        private static void setParkingPointsAsShapeFile(List<GeoPoint> points, string fileName)
+        private static void setParkingPointsAsShapeFile(List<GeoPoint> points, string fileName, bool addDev = false)
         {
             //写入文件
             String rootDir = Path.GetDirectoryName(fileName);
             String shapeFileName = Path.GetFileNameWithoutExtension(fileName);
             ShapeType shapeType = ShapeType.Point;
+            var transform = new Wgs2MgsTransform();
             DbfFieldDesc[] fields = new DbfFieldDesc[] 
             { 
                 new DbfFieldDesc {FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 },
@@ -342,25 +367,30 @@ namespace GISAppDemo.TestCases
             {
                 String[] fieldData = new string[] { " " };
                 List<PointF> vertices = new List<PointF>();
-                float lng = (float)(p.Lng);
-                float lat = (float)(p.Lat);
+                GeoPoint point = p;
+                if (addDev)
+                {
+                    point = transform.Transform(point);
+                }
+                float lng = (float)(point.Lng);
+                float lat = (float)(point.Lat);
                 vertices.Add(new PointF(lng, lat));
                 sfw.AddRecord(vertices.ToArray(), vertices.Count, fieldData);
             }
             sfw.Close();
         }
-        public static void GenerateParkingRegionShape()
+        public static void GenerateParkingRegionShapeFromFile(string fileName, bool addDev = false)
         {
             string txtFileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "stat", 
                 "parkingRegion.txt");
-            string fileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp",
-                "parkingRegion.shp");
+            //string fileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "parkingRegion.shp");
             String rootDir = Path.GetDirectoryName(fileName);
             String shapeFileName = Path.GetFileNameWithoutExtension(fileName);
+            var transform = new Wgs2MgsTransform();
             // Read txt
             string[] lines = File.ReadAllLines(txtFileName);
 
-            ShapeType shapeType = ShapeType.Polygon;
+            ShapeType shapeType = ShapeType.PolyLine;
             DbfFieldDesc[] shpFields = new DbfFieldDesc[] 
             { 
                 new DbfFieldDesc {FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 },
@@ -377,18 +407,87 @@ namespace GISAppDemo.TestCases
                 {
                     float lat = float.Parse(fields[i]);
                     float lng = float.Parse(fields[i + 1]);
-                    vertices.Add(new PointF(lng, lat));
+                    GeoPoint point = new GeoPoint(lat, lng);
+                    if (addDev)
+                    {
+                        point = transform.Transform(point);
+                    }
+                    vertices.Add(new PointF((float)point.Lng, (float)point.Lat));
                 }
                 sfw.AddRecord(vertices.ToArray(), vertices.Count, fieldData);
             }
             sfw.Close();
         }
 
-        private static List<MBR> ExtractRegions(List<GeoPoint> points)
+        public static void GenerateParkingRegionShape(string targetDir, string fileName, bool addDev = false)
+        {
+            var dict = TrajAndHotSpotTest.GetParkingPoints(targetDir);
+            List<GeoPoint> points = new List<GeoPoint>();
+            foreach (var pair in dict)
+            {
+                points.AddRange(pair.Value);
+            }
+            var mbrs = TrajAndHotSpotTest.ExtractRegions(points);
+            GenerateParkingRegionShape(mbrs, fileName, addDev);
+        }
+        public static List<MBR> ExtractRegions(List<GeoPoint> points)
         {
             List<MBR> regions = new List<MBR>();
-            GridVertex index = new GridVertex()
+            // if (lat > 392600000 && lat < 410300000 && lng > 1152500000 && lng < 1173000000)
+            MBR mbr = new MBR(115.25, 39.26, 117.3, 41.03);
+            double cellSize = 500 * TrjTools.Constants.D_PER_M;
+            int minCount = 20;
+            GridPoint index = new GridPoint(points, mbr, cellSize);
+            regions = index.GetHotRegions(minCount);
             return regions;
+        }
+        public static void GenerateParkingRegionShape(List<MBR> mbrs, string fileName, bool addDev = false)
+        {
+            
+            String rootDir = Path.GetDirectoryName(fileName);
+            String shapeFileName = Path.GetFileNameWithoutExtension(fileName);
+            var transform = new Wgs2MgsTransform();
+            // Read txt
+            ShapeType shapeType = ShapeType.PolyLine;
+            DbfFieldDesc[] shpFields = new DbfFieldDesc[] 
+            { 
+                new DbfFieldDesc {FieldName = "ID", FieldType = DbfFieldType.Character, FieldLength = 14, RecordOffset = 0 },
+                //new DbfFieldDesc { FieldName = "Name", FieldType = DbfFieldType.Character, FieldLength = 18, RecordOffset = 14 },
+            };
+            ShapeFileWriter sfw = ShapeFileWriter.CreateWriter(rootDir, shapeFileName, shapeType, shpFields);
+            foreach (var mbr in mbrs)
+            {
+                String[] fieldData = new string[] { " " };
+                List<PointF> vertices = new List<PointF>();
+                GeoPoint[] points = new GeoPoint[] { mbr.TopLeft, mbr.TopRight, mbr.BottomRight, mbr.BottomLeft, mbr.TopLeft };
+                for (int i = 0; i < points.Length; ++i)
+                {
+                    var point = points[i];
+                    if (addDev)
+                    {
+                        point = transform.Transform(point);
+                    }
+                    vertices.Add(point.ToPointF());
+                }
+                sfw.AddRecord(vertices.ToArray(), vertices.Count, fieldData);
+            }
+            sfw.Close();
+        }
+
+        public static void GenerateThreeShapes()
+        {
+            // Generate edges
+            string targetDir = Path.Combine(Constants.DATA_DIR, "beijingTrjPart");
+            //string edgeShapeFileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "edge_dev.shp");
+            //GenerateEdgeShape(targetDir, edgeShapeFileName, true);
+
+            // Generate parking points
+            string parkingPointsShapeFileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "parkingPoints_dev.shp");
+            GenerateParkingPointsShape(targetDir, parkingPointsShapeFileName, true);
+
+            // Generate parking regions
+            //string parkingRegionShapeFileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "parkingRegions_dev.shp");
+            //GenerateParkingRegionShape(targetDir, parkingRegionShapeFileName, true);
         }
     }
 }

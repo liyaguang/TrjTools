@@ -93,6 +93,7 @@
     <Compile Include="Compress\BCompressedMV.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Index\Grid\GridEdge.cs" />
+    <Compile Include="Index\Grid\GridPoint.cs" />
     <Compile Include="Index\Grid\GridVertex.cs" />
     <Compile Include="Index\Grid\GridTrj.cs" />
     <Compile Include="Index\Grid\GridMultiTrj.cs" />

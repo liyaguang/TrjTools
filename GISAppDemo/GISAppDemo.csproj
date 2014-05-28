@@ -33,7 +33,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>GISAppDemo.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile">

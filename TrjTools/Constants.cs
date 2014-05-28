@@ -16,7 +16,7 @@ namespace TrjTools
     /// <summary>
     /// Constants
     /// </summary>
-    static class Constants
+    public static class Constants
     {
         public const double D_PER_M = 10e-6;	//about 10e-6 degree per meter
         public const double M_PER_LAT = 1.1e5;	//about 1.1e5 meters per latitude

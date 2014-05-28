@@ -177,6 +177,20 @@ namespace TrjTools.RoadNetwork
                 return new GeoPoint(min[LAT_IDX], min[LNG_IDX]);
             }
         }
+        public GeoPoint TopRight
+        {
+            get
+            {
+                return new GeoPoint(min[LAT_IDX], max[LNG_IDX]);
+            }
+        }
+        public GeoPoint BottomLeft
+        {
+            get
+            {
+                return new GeoPoint(max[LAT_IDX], min[LNG_IDX]);
+            }
+        }
         public GeoPoint BottomRight
         {
             get

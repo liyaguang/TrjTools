@@ -124,7 +124,7 @@ namespace GISAppDemo
             //output layer
             outputLayer = new VectorLayer("Output");
             outputLayer.Style.Symbol = GISAppDemo.Properties.Resources.g_arrow;
-            outputLayer.Style.Line.Color = Color.FromArgb(120, Color.Cyan);
+            outputLayer.Style.Line.Color = Color.FromArgb(255, Color.Crimson) ;
             outputLayer.Style.Line.Width = 3.0F;
             Color tRed2 = Color.FromArgb(128, Color.Red);
             outputLayer.Style.Fill = new SolidBrush(tRed2);
@@ -178,8 +178,8 @@ namespace GISAppDemo
             //shapeLayer.Style.Line.Color = Color.FromArgb(200, Color.Gray);
             shapeLayer2.Style.Line.Color = Color.FromArgb(200, Color.Navy);
             shapeLayer2.Style.Line.Width = 2;
-            shapeLayer2.Style.PointSize = 7;
-            shapeLayer2.Style.PointColor = new SolidBrush(Color.Green);
+            shapeLayer2.Style.PointSize = 5;
+            shapeLayer2.Style.PointColor = new SolidBrush(Color.FromArgb(200, Color.Green));
             shapeLayer2.SRID = 4326;
             shapeLayer2.CoordinateTransformation = LayerTools.Wgs84toGoogleMercator;
 
@@ -190,11 +190,9 @@ namespace GISAppDemo
             shapeLayer3.Style.Fill = new SolidBrush(Color.FromArgb(128, Color.Red));
             //Set the polygons to have a black outline
             shapeLayer3.Style.Outline = Pens.Black;
-            //shapeLayer.Style.Line.Color = Color.Navy;
-            //shapeLayer.Style.Line.Color = Color.FromArgb(200, Color.Gray);
-            shapeLayer3.Style.Line.Color = Color.FromArgb(200, Color.Navy);
-            shapeLayer3.Style.Line.Width = 2;
-            shapeLayer3.Style.PointSize = 7;
+            shapeLayer3.Style.Line.Color = Color.FromArgb(255, Color.Crimson);
+            shapeLayer3.Style.Line.Width = 3.0F;
+            shapeLayer3.Style.PointSize = 5;
             shapeLayer3.Style.PointColor = new SolidBrush(Color.Green);
             shapeLayer3.SRID = 4326;
             shapeLayer3.CoordinateTransformation = LayerTools.Wgs84toGoogleMercator;
@@ -638,7 +636,8 @@ namespace GISAppDemo
 
         private void miTest2_Click(object sender, EventArgs e)
         {
-            TrajAndHotSpotTest.GenerateParkingRegionShape();
+            //TrajAndHotSpotTest.GenerateParkingRegionShape();
+            generateParkingRegions();
             //var trjs = TrajAndHotSpotTest.mergeBeijingTrjDir(dir, targetDir);
             //// save 
             //foreach (var p in trjs)
@@ -1023,6 +1022,25 @@ namespace GISAppDemo
             RefreshMap();
         }
 
+        public void drawMBR(IEnumerable<MBR> mbrs)
+        {
+            foreach(var mbr in mbrs)
+            {
+                Coordinate[] coords = new Coordinate[5] {
+                    mbr.TopLeft.ToCoordinate(),
+                    mbr.TopRight.ToCoordinate(),
+                    mbr.BottomRight.ToCoordinate(),
+                    mbr.BottomLeft.ToCoordinate(),
+                    mbr.TopLeft.ToCoordinate()
+                };
+                LinearRing ring = new LinearRing(coords);
+                ring = (LinearRing)GeometryTransform.TransformLinearRing(ring, 
+                    LayerTools.Wgs84toGoogleMercator.MathTransform, geofactory);
+                outputProvider.Geometries.Add(ring);
+            }
+            mbMap.Refresh();
+        }
+
         #endregion Draw_Methods
 
 
@@ -1173,7 +1191,19 @@ namespace GISAppDemo
 
         private void generateParkingRegions()
         {
+            string dir = Path.Combine(Constants.DATA_DIR, "beijingTrj");
+            string targetDir = Path.Combine(Constants.DATA_DIR, "beijingTrjPart");
 
+            var dict = TrajAndHotSpotTest.GetParkingPoints(targetDir);
+            List<GeoPoint> points = new List<GeoPoint>();
+            foreach (var pair in dict)
+            {
+                points.AddRange(pair.Value);
+            }
+            var mbrs = TrajAndHotSpotTest.ExtractRegions(points);
+            string parkingRegionShapeFileName = Path.Combine(Constants.DATA_DIR, "beijingTrjPart", "shp", "parkingRegions_dev.shp");
+            TrajAndHotSpotTest.GenerateParkingRegionShape(mbrs, parkingRegionShapeFileName);
+            drawMBR(mbrs);
         }
         #endregion Test_Methods
     }

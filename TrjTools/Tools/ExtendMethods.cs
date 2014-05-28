@@ -6,10 +6,12 @@
 //******************************
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using TrjTools.RoadNetwork;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace TrjTools.Tools
 {
@@ -19,6 +21,11 @@ namespace TrjTools.Tools
         public static Point ToPoint(this GeoPoint p)
         {
             return new Point(p.Lng, p.Lat);
+        }
+
+        public static PointF ToPointF(this GeoPoint p)
+        {
+            return new PointF((float)p.Lng, (float)p.Lat);
         }
         public static Coordinate ToCoordinate(this GeoPoint p)
         {

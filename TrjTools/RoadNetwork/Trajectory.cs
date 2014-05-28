@@ -412,12 +412,12 @@ namespace TrjTools.RoadNetwork
             return speed;
         }
 
-        public List<GeoPoint> GetParkingPoints()
+        public List<GeoPoint> GetParkingPoints(int minInterval = 300)
         {
             List<GeoPoint> points = new List<GeoPoint>();
             double dist = 0, distThreshold = 1;
             int start = 0, current = 0;
-            long minSeconds = 600;
+            long minSeconds = 300;
             while (current < this.Count - 1)
             {
                 dist += GeoPoint.GetDistance(this[current].point, this[current + 1].point);
